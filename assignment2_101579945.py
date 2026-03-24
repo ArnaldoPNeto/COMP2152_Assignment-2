@@ -10,19 +10,17 @@ import os
 import platform
 import datetime
 
-
 print("Python version:", platform.python_version())
 print("Operating system:", os.name)
 
 # TODO: Import the required modules (Step ii)
 # socket, threading, sqlite3, os, platform, datetime
 
-
 # TODO: Print Python version and OS name (Step iii)
-
 
 # TODO: Create the common_ports dictionary (Step iv)
 # Add a 1-line comment above it explaining what it stores
+# this dictionary stores the  common port numbers and their associated services.
 common_ports = {
     21: "FTP",
     22: "SSH",
@@ -38,7 +36,6 @@ common_ports = {
     8080: "HTTP-Alt"
 }
 
-
 # TODO: Create the NetworkTool parent class (Step v)
 # - Constructor: takes target, stores as private self.__target
 # - @property getter for target
@@ -49,6 +46,10 @@ class NetworkTool:
     def __init__(self, target):
         self.__target = ""
         self.target = target
+#Q3
+# The benefit of using @property and @target.setter is that they help control the target value in a safer way.
+# They allow the program to check the value before changing it.
+# In this case, they stop the user from setting an empty string as the target.
 
     @property
     def target(self):
@@ -69,14 +70,15 @@ class NetworkTool:
 #
 # TODO: Your 2-4 sentence answer here... (Part 2, Q3)
 
-
-# Q1: How does PortScanner reuse code from NetworkTool?
-# TODO: Your 2-4 sentence answer here... (Part 2, Q1)
-
 # TODO: Create the PortScanner child class that inherits from NetworkTool (Step vi)
 # - Constructor: call super().__init__(target), initialize self.scan_results = [], self.lock = threading.Lock()
 # - Destructor: print "PortScanner instance destroyed", call super().__del__()
+# Q1: How does PortScanner reuse code from NetworkTool?
 
+# TODO: Your 2-4 sentence answer here... (Part 2, Q1)
+# PortScanner reuses code from NetworkTool by using inheritance.
+# It can use the target variable, getter, setter, and validation from the parent class without writing the same code again.
+# This makes the code cleaner and easier to manage.
 class PortScanner(NetworkTool):
     def __init__(self, target):
         super().__init__(target)
@@ -89,10 +91,7 @@ class PortScanner(NetworkTool):
 
    
 #
-# - scan_port(self, port):
-#     Q4: What would happen without try-except here?
-#     TODO: Your 2-4 sentence answer here... (Part 2, Q4)
-#
+#     - scan_port(self, port):
 #     - try-except with socket operations
 #     - Create socket, set timeout, connect_ex
 #     - Determine Open/Closed status
@@ -105,6 +104,11 @@ class PortScanner(NetworkTool):
 
     def scan_port(self, port):
         sock = None
+#Q4: What would happen without try-except here?
+#TODO: Your 2-4 sentence answer here... (Part 2, Q4)
+# Without try-except, the program can crash if an error happens during the scan.
+# For example, if the target cannot be reached, the program can stop running.
+# Using try-except helps the scanner handle the error and continue checking the other ports.
         try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 sock.settimeout(1)
@@ -133,15 +137,22 @@ class PortScanner(NetworkTool):
 #
 
 #
-#     Q2: Why do we use threading instead of scanning one port at a time?
-#     TODO: Your 2-4 sentence answer here... (Part 2, Q2)
-#
+
+
+
 # - scan_range(self, start_port, end_port):
 #     - Create threads list
 #     - Create Thread for each port targeting scan_port
 #     - Start all threads (one loop)
 #     - Join all threads (separate loop)
- 
+
+
+ #Q2: Why do we use threading instead of scanning one port at a time?
+#TODO: Your 2-4 sentence answer here... (Part 2, Q2)
+# We use threading because it helps the program scan multiple ports at the same time.
+# This makes the scan faster than checking each port one by one.
+# If the program scanned 1024 ports sequentially, it would take a lot more time to finish.
+# Threading makes the program more efficient, especially when scanning a larger range of ports.
     def scan_range(self, start_port, end_port):
         threads = []
 
@@ -265,8 +276,7 @@ if __name__ == "__main__":
     # - Catch ValueError: "Invalid input. Please enter a valid integer."
     # - Range check: "Port must be between 1 and 1024."
     
-
-
+    
     # TODO: After valid input (Step x)
     # - Create PortScanner object
     # - Print "Scanning {target} from port {start} to {end}..."
@@ -280,4 +290,8 @@ if __name__ == "__main__":
 
 # Q5: New Feature Proposal
 # TODO: Your 2-3 sentence description here... (Part 2, Q5)
-# Diagram: See diagram_studentID.png in the repository root
+
+# Diagram: See diagram_101579945.png in the repository root
+# One feature I would like to add is the ability to export scan results to a text file.
+# It could use a list comprehension to collect only the open ports before saving them to the file.
+# This would make the scanner more useful because the user could save the results and read them later easily.
